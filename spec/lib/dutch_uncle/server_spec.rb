@@ -31,7 +31,7 @@ module DutchUncle
 
       context "when there is a point that should alert" do
         before do
-          influxdb.write_point(series_name, value: 5001)
+          influxdb.write_point(series_name, value: 5001, controller: 'fake_controller', server: 'fake_server')
         end
 
         it "triggers notify on alerter" do

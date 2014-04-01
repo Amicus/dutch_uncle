@@ -12,7 +12,7 @@ module DutchUncle
     def check_monitors
       monitors.each_pair do |monitor_name, monitor_config|
         unless Checker.new(influxdb, monitor_name, monitor_config).check
-          alerter.notify!("#{monitor_name} failed")
+          alerter.notify!(monitor_name, "#{monitor_name} has failed")
         end
       end
     end
