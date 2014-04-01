@@ -1,0 +1,7 @@
+long_request:
+  query: 'select * from brief-controller where value > 5000'
+  critical: false
+
+storage_space_used:
+  query: 'select * from server-stats where storage_used_percentage > 80'
+  critical: true
