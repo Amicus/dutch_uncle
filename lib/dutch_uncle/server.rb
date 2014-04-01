@@ -11,18 +11,10 @@ module DutchUncle
 
     def check_monitors
       monitors.each_pair do |monitor_name, monitor_config|
-        points = influxdb.query("#{monitor_config[:query]} AND time > now() - 10m")
-
-        points.each_pair do |series_name, points|
-          unless points.empty?
-            alerter.notify!("#{monitor_name} failed on series #{series_name}")
-          end
+        unless Checker.new(influxdb, monitor_name, monitor_config).check
+          alerter.notify!("#{monitor_name} failed")
         end
       end
-
     end
-
-
-
   end
 end

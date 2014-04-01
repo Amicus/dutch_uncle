@@ -8,3 +8,4 @@ require 'honeybadger'
 
 require 'dutch_uncle/server'
 require 'dutch_uncle/alerter'
+require 'dutch_uncle/checker'
