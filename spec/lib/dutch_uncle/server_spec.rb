@@ -4,7 +4,7 @@ require 'spec_helper'
 module DutchUncle
   describe Server do
 
-    let(:notifier) { Notifier.new }
+    let(:notifier) { server.notifier }
     let(:influxdb) { INFLUX_CLIENT }
 
     let(:series_name) { 'brief-controller' }
@@ -17,7 +17,7 @@ module DutchUncle
           }
       }
     end
-    let(:server) { Server.new(influxdb, notifier: notifier, monitors: monitors) }
+    let(:server) { Server.new(influxdb, monitors: monitors) }
 
     describe "#initialzie" do
       subject { server }
