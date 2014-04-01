@@ -9,10 +9,10 @@ module DutchUncle
     let(:query) { "select * from #{series_name} where value > 5000" }
 
     let(:config) do
-      {
+      Hashie::Mash.new({
         query: query,
         critical: false
-      }
+      })
     end
     let(:checker) { Checker.new(influxdb, 'test-checker', config) }
 
@@ -50,11 +50,11 @@ module DutchUncle
 
       context "with a heartbeat config" do
         let(:config) do
-          {
+           Hashie::Mash.new({
             query: query,
             critical: false,
             heartbeat: true,
-          }
+          })
         end
 
         it "passes when there is a point" do

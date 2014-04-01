@@ -12,7 +12,7 @@ module DutchUncle
     end
 
     def check
-      query = "#{config[:query]} AND time > #{last_run.to_i}"
+      query = "#{config['query']} AND time > #{last_run.to_i}"
       points = influxdb.query(query)
       self.last_run = Time.now
       MonitorResult.new({
