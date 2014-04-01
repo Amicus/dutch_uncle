@@ -5,7 +5,7 @@ module DutchUncle
   describe Server do
 
     let(:alerter) { Alerter.new }
-    let(:influxdb) { InfluxDB::Client.new }
+    let(:influxdb) { INFLUX_CLIENT }
 
     let(:series_name) { 'brief-controller' }
 

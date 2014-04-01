@@ -4,7 +4,7 @@ require 'spec_helper'
 module DutchUncle
   describe Checker do
 
-    let(:influxdb) { InfluxDB::Client.new }
+    let(:influxdb) { INFLUX_CLIENT }
     let(:series_name) { 'brief-controller' }
 
     let(:config) do
