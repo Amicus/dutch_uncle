@@ -23,6 +23,11 @@ module DutchUncle
       its(:query) { should match /#{Regexp.escape(query)} AND time > \d+/}
       its(:run_at) { should be_a(Time) }
 
+      it "uses the last_run in the query for the next check" do
+        run_at = subject.run_at
+        expect(checker.check.query).to match(/time > #{run_at.to_i}/)
+      end
+
       context "with a non-heartbeat config" do
 
         context "when a point exists" do

@@ -29,20 +29,45 @@ module DutchUncle
     describe "#check_monitors" do
       subject { server.check_monitors }
 
-      context "when there is a point that should alert" do
+      let(:monitor_result) do
+        MonitorResult.new({
+          passed: true
+        })
+      end
+
+      context "when checker passes" do
         before do
-          influxdb.write_point(series_name, value: 5001, controller: 'fake_controller', server: 'fake_server')
+          Checker.any_instance.stub(:check).and_return(monitor_result)
+        end
+
+        it "does not trigger notify on notifier" do
+          expect(notifier).to_not receive(:notify!)
+          subject
+        end
+      end
+
+      context "when checker fails" do
+        before do
+          monitor_result.passed = false
+          Checker.any_instance.stub(:check).and_return(monitor_result)
         end
 
         it "triggers notify on notifier" do
           expect(notifier).to receive(:notify!).once
           subject
         end
+      end
 
-
+      context "when checker raises" do
+        before do
+          Checker.any_instance.stub(:check).and_raise "Badness!"
+        end
+        #TODO: better tests of what is sent to notifier
+        it "triggers notify on notifier" do
+          expect(notifier).to receive(:notify!).once
+          subject
+        end
       end
     end
-
-
   end
 end
