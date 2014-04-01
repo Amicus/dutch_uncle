@@ -4,7 +4,7 @@ require 'spec_helper'
 module DutchUncle
   describe Server do
 
-    let(:alerter) { Alerter.new }
+    let(:notifier) { Notifier.new }
     let(:influxdb) { INFLUX_CLIENT }
 
     let(:series_name) { 'brief-controller' }
@@ -17,12 +17,12 @@ module DutchUncle
           }
       }
     end
-    let(:server) { Server.new(influxdb, alerter: alerter, monitors: monitors) }
+    let(:server) { Server.new(influxdb, notifier: notifier, monitors: monitors) }
 
     describe "#initialzie" do
       subject { server }
 
-      its(:alerter) { should == alerter }
+      its(:notifier) { should == notifier }
       its(:influxdb) { should == influxdb }
     end
 
@@ -34,8 +34,8 @@ module DutchUncle
           influxdb.write_point(series_name, value: 5001, controller: 'fake_controller', server: 'fake_server')
         end
 
-        it "triggers notify on alerter" do
-          expect(alerter).to receive(:notify!).once
+        it "triggers notify on notifier" do
+          expect(notifier).to receive(:notify!).once
           subject
         end
 

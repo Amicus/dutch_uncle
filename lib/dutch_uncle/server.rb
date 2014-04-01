@@ -1,19 +1,18 @@
 module DutchUncle
   class Server
 
-    attr_accessor :influxdb, :alerter, :monitors
+    attr_accessor :influxdb, :notifier, :monitors
 
     def initialize(influxdb, opts = {})
       @influxdb = influxdb
-      @alerter = opts[:alerter]
+      @notifier = opts[:notifier]
       @monitors = opts[:monitors]
     end
 
     def check_monitors
       monitors.each_pair do |monitor_name, monitor_config|
-        unless Checker.new(influxdb, monitor_name, monitor_config).check
-          alerter.notify!(monitor_name, "#{monitor_name} has failed")
-        end
+        monitor_result = Checker.new(influxdb, monitor_name, monitor_config).check
+        notifier.notify!(monitor_result)
       end
     end
   end

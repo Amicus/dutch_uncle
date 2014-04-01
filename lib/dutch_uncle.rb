@@ -7,5 +7,6 @@ require 'influxdb'
 require 'honeybadger'
 
 require 'dutch_uncle/server'
-require 'dutch_uncle/alerter'
+require 'dutch_uncle/notifier'
 require 'dutch_uncle/checker'
+require 'dutch_uncle/monitor_result'

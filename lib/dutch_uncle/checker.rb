@@ -12,12 +12,29 @@ module DutchUncle
     end
 
     def check
-      points = influxdb.query("#{config[:query]} AND time > #{last_run.to_i}")
+      query = "#{config[:query]} AND time > #{last_run.to_i}"
+      points = influxdb.query(query)
       self.last_run = Time.now
-
-      points.each_pair do |series_name, points|
-        return points.empty?
-      end
+      MonitorResult.new({
+        passed: passed?(points),
+        name: name,
+        query: query,
+        failed_points: flatten_points(points),
+        run_at: Time.now,
+      })
     end
+
+    private
+
+    def passed?(points)
+      !points.detect {|key, value| !value.empty? }
+    end
+
+    def flatten_points(points_hash)
+      points_hash.map {|series_name,points| points.map {|point| point.merge('series_name' => series_name)} }.flatten
+    end
+
   end
+
 end
+
