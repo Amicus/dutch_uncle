@@ -5,6 +5,7 @@ end
 
 require 'influxdb'
 require 'honeybadger'
+require 'cluster-fuck'
 
 require 'dutch_uncle/server'
 require 'dutch_uncle/notifier'
