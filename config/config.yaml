@@ -1,0 +1,13 @@
+long_request:
+  query: 'select * from brief-controller where value > 5000'
+  critical: false
+
+messages_processing:
+  query: 'select * from donaghy.pingWorker'
+  critical: true
+  heartbeat: true
+  interval: 300 # time in seconds
+
+storage_space_used:
+  query: 'select * from server-stats where storage_used_percentage > 80'
+  critical: true

@@ -7,7 +7,7 @@ module DutchUncle
 
     def initialize(influxdb, opts = {})
       @influxdb = influxdb
-      @notifier = Notifier.new #maybe don't pass this in?
+      @notifier = Notifier.new
       @monitors = opts[:monitors]
     end
 

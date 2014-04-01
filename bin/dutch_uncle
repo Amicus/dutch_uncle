@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+#need to figure that out path
+require 'dutch_uncle'
+require 'pry'
+
+#INFLUX_CONFIG = ClusterFuck::Reader.new('influxdb').read
+#HONEYBADGER_CONFIG = ClusterFuck::Reader.new('honeybadger').read
+config = {}
+config[:monitors] = YAML.load(File.open(File.expand_path('./config/config.yaml')))
+influx = InfluxDB::Client.new("dutch_uncle_development")
+
+#this should probably go in it's own initializer
+Honeybadger.configure do |config|
+  config.api_key = '***REMOVED***'
+end
+
+
+server = DutchUncle::Server.new(influx, {monitors: config[:monitors]})
+
+Signal.trap('EXIT') do
+  server.stop
+end
+
+server.start
