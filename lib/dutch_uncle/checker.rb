@@ -26,8 +26,12 @@ module DutchUncle
 
     private
 
-    def passed?(points)
-      !points.detect {|key, value| !value.empty? }
+    def passed?(points_hash)
+      if !points_hash.detect {|series_name, points| !points.empty? } && !config[:heartbeat]
+        true
+      elsif points_hash.detect {|series_name, points| !points.empty? } && config[:heartbeat]
+        true
+      end
     end
 
     def flatten_points(points_hash)
