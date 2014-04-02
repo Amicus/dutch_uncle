@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "influxdb"
   spec.add_runtime_dependency "honeybadger"
+  spec.add_runtime_dependency "commander"
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
