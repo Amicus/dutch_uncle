@@ -2,22 +2,34 @@
 
 #need to figure that out path
 require 'dutch_uncle'
+require 'yaml'
 
-#remove clusterfuck and pry
+
 #have it default to using a config in a directory and also take command line args
+#expand config file to have everything necessary
 config = {}
-config[:monitors] = YAML.load(File.open(File.expand_path('./config/config.yaml')))
+config[:monitors] = YAML.load_file(File.expand_path('./config/config.yaml'))
 influx = InfluxDB::Client.new("dutch_uncle_development")
-
-#lookup how to clean this from github
-
 
 
 server = DutchUncle::Server.new(influx, {monitors: config[:monitors]})
 
-#trap more stuff
-Signal.trap('EXIT') do
+queue = Queue.new
+
+at_exit do
   server.stop
+  queue.push(1)
 end
 
 server.start
+queue.pop
+
+#commander gem
+
+#todo:
+#remove config File
+#remove requires from this File when done
+#add cli class and options
+#default configuration from a directory where this is run
+#write points to influx when checking
+#make heroku app write out config

@@ -2,8 +2,11 @@ module DutchUncle
   class Notifier
 
     def notify!(monitor_result)
-      message = monitor_result.message
-      Honeybadger.notify(monitor_result.name, message, monitor_result.failed_points.first || {})
+      Honeybadger.notify({
+        error_class: monitor_result.name,
+        error_message: monitor_result.message,
+        parameters: monitor_result.failed_points.first || {}
+      })
     end
 
   end

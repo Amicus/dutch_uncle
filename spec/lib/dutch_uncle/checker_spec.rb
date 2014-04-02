@@ -9,12 +9,22 @@ module DutchUncle
     let(:query) { "select * from #{series_name} where value > 5000" }
 
     let(:config) do
-      Hashie::Mash.new({
+      {
         query: query,
         critical: false
-      })
+      }
     end
     let(:checker) { Checker.new(influxdb, 'test-checker', config) }
+
+    describe "#initialize" do
+      subject { checker }
+      let(:config) { {'query' => 'query', 'heartbeat' => true} }
+
+      it "accepts a string for query and heartbeat" do
+        expect(subject.query).to eq('query')
+        expect(subject.heartbeat).to be_true
+      end
+    end
 
     describe "#check" do
       subject { checker.check }
@@ -28,8 +38,7 @@ module DutchUncle
         expect(checker.check.query).to match(/time > #{run_at.to_i}/)
       end
 
-      context "with a non-heartbeat config" do
-
+      shared_examples "non-heartbeat" do
         context "when a point exists" do
           before do
             influxdb.write_point(series_name, value: 5001, controller: 'fake_controller', server: 'fake_server')
@@ -48,13 +57,22 @@ module DutchUncle
         end
       end
 
+      context "with a query with a WHERE clause" do
+        it_behaves_like "non-heartbeat"
+      end
+
+      context "without a where clause in the query" do
+        let(:query) { "select * from #{series_name}" }
+        it_behaves_like "non-heartbeat"
+      end
+
       context "with a heartbeat config" do
         let(:config) do
-           Hashie::Mash.new({
+           {
             query: query,
             critical: false,
             heartbeat: true,
-          })
+          }
         end
 
         it "passes when there is a point" do
@@ -66,6 +84,7 @@ module DutchUncle
           expect(subject.passed).to be_false
         end
       end
+
     end
   end
 end
