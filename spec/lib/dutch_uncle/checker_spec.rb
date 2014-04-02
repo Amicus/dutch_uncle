@@ -38,6 +38,10 @@ module DutchUncle
         expect(checker.check.query).to match(/time > #{run_at.to_i}/)
       end
 
+      it "writes to influx when making a check" do
+        expect(influxdb.query("select * from #{subject.name}")).not_to be_empty
+      end
+
       shared_examples "non-heartbeat" do
         context "when a point exists" do
           before do

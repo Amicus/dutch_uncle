@@ -15,9 +15,11 @@ module DutchUncle
     def check
       query = query_with_time
       points = influxdb.query(query)
+      passed = passed?(points)
       self.last_run = Time.now
+      write_check_to_influx(passed)
       MonitorResult.new({
-        passed: passed?(points),
+        passed: passed,
         name: name,
         query: query,
         failed_points: flatten_points(points),
@@ -26,6 +28,16 @@ module DutchUncle
     end
 
     private
+
+    #do we want to send the failed points here as well?
+    def write_check_to_influx(passed)
+      data = {
+        query: query,
+        passed: passed,
+        time: Time.now.to_i
+      }
+      influxdb.write_point(name, data)
+    end
 
     def passed?(points_hash)
       if !points_hash.detect {|series_name, points| !points.empty? } && !heartbeat
