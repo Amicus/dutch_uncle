@@ -1,35 +1,27 @@
 #!/usr/bin/env ruby
 
-#need to figure that out path
 require 'dutch_uncle'
-require 'yaml'
+require 'commander/import'
+
+program :name, 'Dutch Uncle'
+program :version, DutchUncle::VERSION
+program :description, 'dutch uncle is watching'
 
 
-#have it default to using a config in a directory and also take command line args
-#expand config file to have everything necessary
-config = {}
-config[:monitors] = YAML.load_file(File.expand_path('./config/config.yaml'))
-influx = InfluxDB::Client.new("dutch_uncle_development")
+command :start do |c|
+  c.syntax = 'dutch_uncle start'
+  c.description = "runs dutch uncle in the current directory"
+  c.option '--config STRING', String, 'path to config'
+  c.action do |args, options|
+    options.default :config => './config.yaml'
+    cli = DutchUncle::Cli.new(options.config)
 
-
-server = DutchUncle::Server.new(influx, {monitors: config[:monitors]})
-
-queue = Queue.new
-
-at_exit do
-  server.stop
-  queue.push(1)
+    queue = Queue.new
+    cli.start
+    queue.pop
+    at_exit do
+      cli.stop
+      queue.push(1)
+    end
+  end
 end
-
-server.start
-queue.pop
-
-#commander gem
-
-#todo:
-#remove config File
-#remove requires from this File when done
-#add cli class and options
-#default configuration from a directory where this is run
-#write points to influx when checking
-#make heroku app write out config
