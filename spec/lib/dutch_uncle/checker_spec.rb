@@ -35,7 +35,7 @@ module DutchUncle
 
       it "uses the last_run in the query for the next check" do
         run_at = subject.run_at
-        expect(checker.check.query).to match(/time > #{run_at.to_i}/)
+        expect(checker.check.query).to match(/time > \d+/)
       end
 
       it "writes to influx when making a check" do

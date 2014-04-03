@@ -1,8 +1,8 @@
 module DutchUncle
   class Checker
 
-    attr_reader :name, :influxdb, :heartbeat
-    attr_accessor :query, :last_run
+    attr_reader :name, :query, :influxdb, :heartbeat
+    attr_accessor :last_run
 
     def initialize(influxdb, name, config)
       @influxdb = influxdb
@@ -37,7 +37,6 @@ module DutchUncle
       data = {
         name: name,
         query: query,
-        time: Time.now.to_i
       }
       influxdb.write_point('dutch_uncle.checks', data)
     end
@@ -47,7 +46,6 @@ module DutchUncle
       data = {
         query: query,
         name: name,
-        time: Time.now.to_i,
         points: failed_points
       }
       influxdb.write_point('dutch_uncle.failures', data)
@@ -67,7 +65,7 @@ module DutchUncle
 
     def query_with_time
       joiner = query.match(/where/i) ? 'AND' : 'WHERE'
-      "#{query} #{joiner} time > #{last_run.to_i}"
+      "#{query} #{joiner} time > #{last_run.nsec}"
     end
 
     def debug(txt)
