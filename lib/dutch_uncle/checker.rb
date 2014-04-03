@@ -37,6 +37,7 @@ module DutchUncle
       data = {
         name: name,
         query: query,
+        time: Time.now.to_i
       }
       influxdb.write_point('dutch_uncle.checks', data)
     end
@@ -46,6 +47,7 @@ module DutchUncle
       data = {
         query: query,
         name: name,
+        time: Time.now.to_i,
         points: failed_points
       }
       influxdb.write_point('dutch_uncle.failures', data)
@@ -65,8 +67,7 @@ module DutchUncle
 
     def query_with_time
       joiner = query.match(/where/i) ? 'AND' : 'WHERE'
-      #influx uses nanoseconds
-      "#{query} #{joiner} time > #{(last_run.to_f * 1000).to_i}"
+      "#{query} #{joiner} time > #{last_run.to_i}s"
     end
 
     def debug(txt)
