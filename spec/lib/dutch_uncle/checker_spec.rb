@@ -39,7 +39,8 @@ module DutchUncle
       end
 
       it "writes to influx when making a check" do
-        expect(influxdb.query("select * from #{subject.name}")).not_to be_empty
+        expect(checker).to receive(:write_check_to_influx).once
+        subject
       end
 
       shared_examples "non-heartbeat" do
@@ -53,11 +54,21 @@ module DutchUncle
           it "assigns series name to failed_points" do
             expect(subject.failed_points.first['series_name']).to eq(series_name)
           end
+
+          it "writes the failure to influx" do
+            expect(checker).to receive(:write_failure_to_influx).once
+            subject
+          end
         end
 
         context "when there is no point that should alert" do
           its(:passed) { should be_true }
           its(:failed_points) { should be_empty }
+
+          it "doesn't write the failure to influx" do
+            expect(checker).to_not receive(:write_failure_to_influx)
+            subject
+          end
         end
       end
 
@@ -79,16 +90,35 @@ module DutchUncle
           }
         end
 
-        it "passes when there is a point" do
-          influxdb.write_point(series_name, value: 5001, controller: 'fake_controller', server: 'fake_server')
-          expect(subject.passed).to be_true
+        context "when there is a point" do
+          before do
+            influxdb.write_point(series_name, value: 5001, controller: 'fake_controller', server: 'fake_server')
+          end
+
+          it "passes" do
+            expect(subject.passed).to be_true
+          end
+
+          it "doesn't write the failure to influx" do
+            expect(checker).to_not receive(:write_failure_to_influx)
+            subject
+          end
+
         end
 
-        it "fails when there is not a point" do
-          expect(subject.passed).to be_false
+        context "when there is not a point" do
+
+          it "fails" do
+            expect(subject.passed).to be_false
+          end
+
+          it "writes the failure to influx" do
+            expect(checker).to receive(:write_failure_to_influx).once
+            subject
+          end
+
         end
       end
-
     end
   end
 end
