@@ -4,8 +4,11 @@
 # loaded once.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'logger'
 
 require 'dutch_uncle'
+DutchUncle.logger.level = Logger::INFO
+
 Dir["spec/support/**/*.rb"].each {|f| require File.expand_path(f)}
 
 require 'pry'

@@ -13,6 +13,7 @@ module DutchUncle
     end
 
     def start
+      debug("starting server")
       return loop_thread if loop_thread
 
       self.loop_thread = Thread.new do
@@ -25,7 +26,9 @@ module DutchUncle
     end
 
     def stop
+      debug('stopping server')
       self.stopped = true
+      self.loop_thread = nil
     end
 
     def stopped?
@@ -33,6 +36,7 @@ module DutchUncle
     end
 
     def check_monitors
+      debug("checking #{checkers.count} checkers")
       checkers.each do |checker|
         break if stopped?
         begin
@@ -49,6 +53,10 @@ module DutchUncle
   private
     def loop_interval
       LOOP_INTERVAL
+    end
+
+    def debug(txt)
+      DutchUncle.logger.debug("DutchUncle::Server - #{txt}")
     end
 
   end

@@ -1,6 +1,14 @@
 require "dutch_uncle/version"
+require 'logger'
 
 module DutchUncle
+  def self.logger
+    @logger ||= Logger.new(STDOUT)
+  end
+
+  def self.logger=(logger)
+    @logger = logger
+  end
 end
 
 require 'influxdb'

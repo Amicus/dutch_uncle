@@ -14,6 +14,7 @@ module DutchUncle
 
     def check
       query = query_with_time
+      debug("checking: #{query}")
       write_check_to_influx
       points = influxdb.query(query)
       passed = passed?(points)
@@ -32,6 +33,7 @@ module DutchUncle
     private
 
     def write_check_to_influx
+      debug("writing dutch_uncle.checks")
       data = {
         name: name,
         query: query,
@@ -41,6 +43,7 @@ module DutchUncle
     end
 
     def write_failure_to_influx(failed_points)
+      debug("writing dutch_uncle.failures")
       data = {
         query: query,
         name: name,
@@ -65,6 +68,10 @@ module DutchUncle
     def query_with_time
       joiner = query.match(/where/i) ? 'AND' : 'WHERE'
       "#{query} #{joiner} time > #{last_run.to_i}"
+    end
+
+    def debug(txt)
+      DutchUncle.logger.debug("DutchUncle::Checker(#{name}) - #{txt}")
     end
 
   end
