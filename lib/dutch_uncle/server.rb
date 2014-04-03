@@ -26,7 +26,6 @@ module DutchUncle
 
     def stop
       self.stopped = true
-      loop_thread.join
     end
 
     def stopped?
@@ -35,6 +34,7 @@ module DutchUncle
 
     def check_monitors
       checkers.each do |checker|
+        break if stopped?
         begin
           monitor_result = checker.check
           notifier.notify!(monitor_result) unless monitor_result.passed?

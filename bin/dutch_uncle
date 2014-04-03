@@ -18,10 +18,14 @@ command :run do |c|
 
     queue = Queue.new
     cli.start
-    queue.pop
     at_exit do
       cli.stop
-      queue.push(1)
+    end
+    begin
+      queue.pop
+    rescue Interrupt
+      # when you hit ctrl-C here (or send a kill signal) it'll raise the interrupt
+      # on the listening pop... we don't care about that, so we just proceed on our merry way
     end
   end
 end
