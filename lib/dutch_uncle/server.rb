@@ -9,6 +9,7 @@ module DutchUncle
       @influxdb = influxdb
       @notifier = Notifier.new
       @monitors = opts[:monitors]
+      debug("initialized with #{monitors}")
       @checkers = monitors.map {|monitor_name, monitor_config| Checker.new(influxdb, monitor_name, monitor_config) }
     end
 
