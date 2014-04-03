@@ -1,12 +1,13 @@
 require 'yaml'
+require 'erb'
 
 module DutchUncle
-  class Cli
+  class Runner
     attr_reader :influxdb, :server
     attr_accessor :config, :monitors
     
     def initialize(config_path)
-      self.config = YAML.load_file(File.expand_path(config_path))
+      self.config = YAML.load(ERB.new(File.read(File.expand_path(config_path))).result)
       configure_influxdb
       configure_notifier
       @server = Server.new(influxdb, monitors: config["monitors"])

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 module DutchUncle
-  describe Cli do
+  describe Runner do
     let(:config_path) { 'spec/support/config.yaml' }
     let(:config) { YAML.load_file(config_path) }
-    subject { Cli.new(config_path) }
+    subject { Runner.new(config_path) }
     
     describe "#initialize" do
 

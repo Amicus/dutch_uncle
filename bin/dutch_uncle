@@ -14,12 +14,12 @@ command :run do |c|
   c.option '--config STRING', String, 'path to config'
   c.action do |args, options|
     options.default :config => './config.yaml'
-    cli = DutchUncle::Cli.new(options.config)
+    runner = DutchUncle::Runner.new(options.config)
 
     queue = Queue.new
-    cli.start
+    runner.start
     at_exit do
-      cli.stop
+      runner.stop
     end
     begin
       queue.pop
