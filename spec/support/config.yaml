@@ -1,4 +1,4 @@
-honeybadger:
+notifier:
   api_key: 'apikey'
 
 influxdb:

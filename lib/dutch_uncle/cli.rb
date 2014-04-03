@@ -1,23 +1,18 @@
 require 'yaml'
-require 'pry'
 
 module DutchUncle
   class Cli
-    attr_reader :influxdb, :notifier, :server
+    attr_reader :influxdb, :server
     attr_accessor :config, :monitors
-
-#have it default to using a config in a directory and also take command line args
-#expand config file to have everything necessary
-#need to figure that out path
     
     def initialize(config_path)
       self.config = YAML.load_file(File.expand_path(config_path))
-      setup_configs
-      @server = Server.new(influxdb, monitors: monitors)
+      configure_influxdb
+      configure_notifier
+      @server = Server.new(influxdb, monitors: config["monitors"])
     end
 
     def start
-      puts 'calling start'
       server.start
     end
 
@@ -26,12 +21,6 @@ module DutchUncle
     end
 
     private
-    
-    def setup_configs
-      configure_influxdb
-      configure_notifier
-      setup_monitors
-    end
 
     def configure_influxdb
       influxdb_config = self.config["influxdb"] || influxdb_config[:influxdb]
@@ -46,10 +35,6 @@ module DutchUncle
     def configure_notifier
       notifier_config = config["notifier"] || config[:notifier]
       Notifier.configure(notifier_config)
-    end
-
-    def setup_monitors
-      self.monitors = config["monitors"]
     end
 
   end
