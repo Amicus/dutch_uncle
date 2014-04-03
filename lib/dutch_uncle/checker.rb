@@ -65,7 +65,8 @@ module DutchUncle
 
     def query_with_time
       joiner = query.match(/where/i) ? 'AND' : 'WHERE'
-      "#{query} #{joiner} time > #{last_run.nsec}"
+      #influx uses nanoseconds
+      "#{query} #{joiner} time > #{(last_run.to_f * 1000).to_i}"
     end
 
     def debug(txt)
