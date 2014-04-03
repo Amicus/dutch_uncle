@@ -1,8 +1,8 @@
 module DutchUncle
   class Checker
 
-    attr_reader :name, :query, :influxdb, :heartbeat
-    attr_accessor :last_run
+    attr_reader :name, :influxdb, :heartbeat
+    attr_accessor :query, :last_run
 
     def initialize(influxdb, name, config)
       @influxdb = influxdb
@@ -13,7 +13,7 @@ module DutchUncle
     end
 
     def check
-      query = query_with_time
+      self.query = query_with_time
       debug("checking: #{query}")
       write_check_to_influx
       points = influxdb.query(query)
