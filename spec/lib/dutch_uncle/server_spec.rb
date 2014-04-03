@@ -18,12 +18,54 @@ module DutchUncle
       }
     end
     let(:server) { Server.new(influxdb, monitors: monitors) }
+    let(:short_loop_interval) { 0.001 }
 
-    describe "#initialzie" do
+    describe "#initialize" do
       subject { server }
 
       its(:notifier) { should == notifier }
       its(:influxdb) { should == influxdb }
+    end
+
+    describe "#start" do
+      subject { server.start }
+
+      before do
+        server.stub(:loop_interval).and_return(short_loop_interval)
+      end
+
+      after do
+        server.stop
+      end
+
+      it "checks the monitors" do
+        expect(server).to receive(:check_monitors).at_least(2).times
+        subject
+        sleep(short_loop_interval*3)
+      end
+
+    end
+
+    describe "#stop" do
+
+      subject { server.stop }
+
+      before do
+        server.stub(:loop_interval).and_return(short_loop_interval)
+        server.start
+      end
+
+      it "sets stopped to true" do
+        subject
+        expect(server.stopped).to be_true
+      end
+
+      it "stops the checking" do
+        subject
+        expect(server).to_not receive(:check_monitors)
+        sleep(short_loop_interval)
+      end
+
     end
 
     describe "#check_monitors" do

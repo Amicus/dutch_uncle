@@ -9,7 +9,7 @@ module DutchUncle
     describe "#initialize" do
 
       it "configures influxdb correctly" do
-        expect(subject.influxdb.write_point('test_point', value: 1)).to_not raise_error
+        expect { subject.influxdb.write_point('test_point', value: 1) }.to_not raise_error
       end
 
       it "sets up monitors" do
