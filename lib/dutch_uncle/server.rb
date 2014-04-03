@@ -3,12 +3,13 @@ module DutchUncle
 
     LOOP_INTERVAL = 30 #seconds
 
-    attr_accessor :influxdb, :notifier, :monitors, :loop_thread, :stopped
+    attr_accessor :influxdb, :notifier, :monitors, :loop_thread, :stopped, :checkers
 
     def initialize(influxdb, opts = {})
       @influxdb = influxdb
       @notifier = Notifier.new
       @monitors = opts[:monitors]
+      @checkers = monitors.map {|monitor_name, monitor_config| Checker.new(influxdb, monitor_name, monitor_config) }
     end
 
     def start
@@ -33,12 +34,12 @@ module DutchUncle
     end
 
     def check_monitors
-      monitors.each_pair do |monitor_name, monitor_config|
+      checkers.each do |checker|
         begin
-          monitor_result = Checker.new(influxdb, monitor_name, monitor_config).check
+          monitor_result = checker.check
           notifier.notify!(monitor_result) unless monitor_result.passed?
         rescue StandardError => e
-          message = "#{monitor_name} FAILED TO PROCESS due to #{e.class}"
+          message = "#{checker.name} FAILED TO PROCESS due to #{e.class}"
           monitor_result = MonitorResult.new(passed: false, message: message, failed_points: [e])
           notifier.notify!(monitor_result)
         end
