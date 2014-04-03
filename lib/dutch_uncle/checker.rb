@@ -13,7 +13,7 @@ module DutchUncle
     end
 
     def check
-      self.query = query_with_time
+      query = query_with_time
       debug("checking: #{query}")
       write_check_to_influx
       points = influxdb.query(query)
