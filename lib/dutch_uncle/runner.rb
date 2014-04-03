@@ -30,7 +30,7 @@ module DutchUncle
       database  = influxdb_config["database"] || influxdb_config[:database]
       port      = influxdb_config["port"]  || influxdb_config[:port]
       host      = influxdb_config['hosts'] || influxdb_config['host'] || influxdb_config[:host] || influxdb_config[:hosts]
-      @influxdb = InfluxDB::Client.new(host, port, username, password, database)
+      @influxdb = InfluxDB::Client.new(database, host: host, port: port, username: username, password: password)
     end
 
     def configure_notifier
