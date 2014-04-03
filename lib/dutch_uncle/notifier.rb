@@ -1,8 +1,11 @@
 module DutchUncle
   class Notifier
 
-    def self.configure(config)
-      Honeybadger.configure { |config| config.api_key = config['api_key'] }
+    def self.configure(notifier_config)
+      Honeybadger.configure do |config|
+        config.api_key = notifier_config['api_key']
+        config.environment_name = notifier_config['environment']
+      end
     end
 
     def notify!(monitor_result)

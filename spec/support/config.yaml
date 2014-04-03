@@ -1,4 +1,5 @@
 notifier:
+  environment: 'environment'
   api_key: 'apikey'
 
 influxdb:
