@@ -15,12 +15,12 @@ module DutchUncle
     def check
       query = query_with_time
       debug("checking: #{query}")
-      write_check_to_influx
+      write_check_to_influx(query)
       points = influxdb.query(query)
       passed = passed?(points)
       failed_points = flatten_points(points)
       self.last_run = Time.now
-      write_failure_to_influx(failed_points) unless passed
+      write_failure_to_influx(query, failed_points) unless passed
       MonitorResult.new({
         passed: passed,
         name: name,
@@ -32,7 +32,7 @@ module DutchUncle
 
     private
 
-    def write_check_to_influx
+    def write_check_to_influx(query)
       debug("writing dutch_uncle.checks")
       data = {
         name: name,
@@ -42,7 +42,7 @@ module DutchUncle
       influxdb.write_point('dutch_uncle.checks', data)
     end
 
-    def write_failure_to_influx(failed_points)
+    def write_failure_to_influx(query, failed_points)
       debug("writing dutch_uncle.failures")
       data = {
         query: query,
