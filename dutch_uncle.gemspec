@@ -6,10 +6,10 @@ require 'dutch_uncle/version'
 Gem::Specification.new do |spec|
   spec.name          = "dutch_uncle"
   spec.version       = DutchUncle::VERSION
-  spec.authors       = ["Topper Bowers"]
-  spec.email         = ["topper@toppingdesign.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.authors       = ["Topper Bowers", "Chris Voxland"]
+  spec.email         = ["topper@amicushq.com", "chris@amicushq.com"]
+  spec.summary       = %q{DutchUncle is watching}
+  spec.description   = %q{App monitoring and notification for influxdb and honeybadger.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
