@@ -8,8 +8,8 @@ program :version, DutchUncle::VERSION
 program :description, 'dutch uncle is watching'
 
 
-command :start do |c|
-  c.syntax = 'dutch_uncle start'
+command :run do |c|
+  c.syntax = 'dutch_uncle run'
   c.description = "runs dutch uncle in the current directory"
   c.option '--config STRING', String, 'path to config'
   c.action do |args, options|
