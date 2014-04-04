@@ -1,0 +1,15 @@
+language: ruby
+rvm:
+- 2.0.0
+notifications:
+  email:
+  - tech@amicushq.com
+  campfire:
+    rooms:
+      secure: BxJjTeW5CXdTpYUbISJM9HlP+gj2SejivBt246kbBDAcjfxuk+DnWNgW2C+oGEdCYOom+PLlYuHVfhCe3KQnToxkAk1eNmjCC3rMNS4FD1SzhzIdoY2XVZx9kWkv8u4V5+cCqxwn7CyaS8d7aQMFP4gBCziVu4Pezt6QgACZGNc=
+branches:
+  only:
+  - master
+  - production
+script:
+  - bundle exec rspec spec
