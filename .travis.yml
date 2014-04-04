@@ -11,5 +11,9 @@ branches:
   only:
   - master
   - production
+before_install:
+  -wget http://s3.amazonaws.com/influxdb/influxdb_latest_amd64.deb
+  -sudo dpkg -i influxdb_latest_amd64.deb
+  -influxdb
 script:
   - bundle exec rspec
