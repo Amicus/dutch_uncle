@@ -36,8 +36,7 @@ module DutchUncle
       debug("writing dutch_uncle.checks")
       data = {
         name: name,
-        query: query,
-        time: Time.now.to_i
+        query: query
       }
       influxdb.write_point('dutch_uncle.checks', data)
     end
@@ -47,7 +46,6 @@ module DutchUncle
       data = {
         query: query,
         name: name,
-        time: Time.now.to_i,
         points: failed_points
       }
       influxdb.write_point('dutch_uncle.failures', data)
