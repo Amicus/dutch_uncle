@@ -12,8 +12,7 @@ module DutchUncle
     let(:monitors) do
       {
           long_request: {
-              query: "select * from #{series_name} where value > 5000",
-              critical: false
+              query: "select * from #{series_name} where value > 5000"
           }
       }
     end

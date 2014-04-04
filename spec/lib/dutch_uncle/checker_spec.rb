@@ -7,13 +7,7 @@ module DutchUncle
     let(:influxdb) { INFLUX_CLIENT }
     let(:series_name) { 'brief-controller' }
     let(:query) { "select * from #{series_name} where value > 5000" }
-
-    let(:config) do
-      {
-        query: query,
-        critical: false
-      }
-    end
+    let(:config) { {query: query} }
     let(:checker) { Checker.new(influxdb, 'test-checker', config) }
 
     describe "#initialize" do
@@ -85,7 +79,6 @@ module DutchUncle
         let(:config) do
            {
             query: query,
-            critical: false,
             heartbeat: true,
           }
         end
