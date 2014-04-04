@@ -12,4 +12,4 @@ branches:
   - master
   - production
 script:
-  - bundle exec rspec spec
+  - bundle exec rspec
