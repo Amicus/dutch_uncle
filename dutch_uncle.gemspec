@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "influxdb"
+  spec.add_runtime_dependency "influxdb", '>= 0.1.5'
   spec.add_runtime_dependency "honeybadger"
   spec.add_runtime_dependency "commander"
 
