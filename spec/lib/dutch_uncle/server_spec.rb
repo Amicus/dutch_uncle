@@ -38,9 +38,14 @@ module DutchUncle
       end
 
       it "checks the monitors" do
-        expect(server).to receive(:check_monitors).at_least(2).times
+        queue = Queue.new
+        expect(server).to receive(:check_monitors).at_least(2).times.and_return do
+          queue.push(:ok)
+        end
         subject
-        sleep(short_loop_interval*3)
+        Timeout.timeout(short_loop_interval * 10) do
+          2.times { queue.pop }
+        end
       end
 
     end
